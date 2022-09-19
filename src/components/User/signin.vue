@@ -16,11 +16,16 @@
               </div>
               
               <button>
-                  Sign in
+                <span v-if="type">sign in </span>
+                <span v-else> sign up </span>
               </button>
 
-              <div class="change_type">
-                I want to sign up.
+              <div class="change_type" @click="type =!type">
+                <span v-if="type"> I want to sign up. </span>
+                <span v-else> I want to sign in. </span>
+          
+
+               
               </div>
 
           </form>
@@ -43,8 +48,20 @@
         },
         methods: {
             onSubmit () {
-                console.log(this.formdata)
-            }
-        }
+              if(this.type){
+                console.log("signin")
+   
+              }else{
+                console.log("signup")
+
+              }
+            },
+       
+        },
+        mounted() {
+                console.log(this.$store.state.user.name)
+            },
+         
+
     }
 </script>
