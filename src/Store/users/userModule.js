@@ -1,7 +1,6 @@
- 
 const API_Key = 'AIzaSyArd4a0CnWru4el9r-KeV6MuR-guIKmQZI';
 import axios from "axios";
-
+import router from '../../routes'
 
 const userModule = {
     state(){
@@ -17,11 +16,20 @@ const userModule = {
         state.email = payload.email,
         state.token = payload.idToken,
         state.refresh = payload.refreshToken
-
+       },
+       resetAuth(state){
+        state.email = null;
+        state.token = null;
+        state.refresh = null;
 
        }
     },
     actions:{
+        removeToken(){
+            localStorage.removeItem('token'),
+            localStorage.removeItem('refresh')
+
+        },
         setToken(context, payload){
             localStorage.setItem('token', payload.idToken),
             localStorage.setItem('refresh', payload.refreshToken)
@@ -49,6 +57,13 @@ const userModule = {
                 context.dispatch('setToken', response.data)
             }).catch(err=> 
                 console.log(err))
+
+        },
+        signOut(context){
+            context.commit('resetAuth');
+            context.dispatch('removeToken')
+            router.push('/')
+            //when user is signed out it will be token immediatly to Home
 
         }
     }
