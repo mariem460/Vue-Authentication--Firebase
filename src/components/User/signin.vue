@@ -50,17 +50,17 @@
             onSubmit () {
               if(this.type){
                 console.log("signin")
+                this.$store.dispatch('signin', this.formdata )
    
               }else{
                 console.log("signup")
+                this.$store.dispatch('signup', this.formdata)
 
               }
             },
        
         },
-        mounted() {
-                console.log(this.$store.state.user.name)
-            },
+      
          
 
     }
