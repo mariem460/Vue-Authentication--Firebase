@@ -13,7 +13,7 @@
                         <div style="display:inline"
                         @click="signOut">Sign out</div>
                     </li>
-                    <li>
+                    <li  v-if="!isAuth">
                         <router-link to="/signin">Sign in</router-link>
                     </li>
                     <li>
@@ -31,6 +31,12 @@
         methods:{
             signOut(){
                 this.$store.dispatch('signOut')
+
+            }
+        },
+        computed:{
+            isAuth(){
+                return this.$store.getters.isAuth
 
             }
         }

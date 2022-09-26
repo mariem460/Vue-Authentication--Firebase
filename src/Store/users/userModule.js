@@ -7,8 +7,17 @@ const userModule = {
         return {
             email:'',
             token:'',
-            refresh: ''
+            refresh: '',
+           
           
+        }
+    },
+    getters:{
+        isAuth(state){
+            if(state.email){
+                return true
+            }
+            return  false
         }
     },
     mutations:{
@@ -64,6 +73,37 @@ const userModule = {
             context.dispatch('removeToken')
             router.push('/')
             //when user is signed out it will be token immediatly to Home
+
+        },
+        async autoLogin(context){
+            try {
+                const refreshToken = localStorage.getItem('refresh')
+                if(refreshToken){
+                    const token = await axios.post(`https://securetoken.googleapis.com/v1/token?key=${API_Key}`,{
+                        grant_type: 'refresh_token',
+                        refresh_token:refreshToken
+
+                    })
+                    console.log(token.data)
+                    const user = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_Key}`, {
+                        idToken: token.data.id_token
+                     
+
+                    })
+                    const newTokens = {
+                        email:  user.data.users[0].email,
+                        idToken: token.data.id_token,
+                        refreshToken :token.data.refresh_token
+                    }
+                    context.commit('authUser', newTokens)
+                    context.dispatch('setToken',newTokens)
+                }
+            
+                
+            } catch (error) {
+                console.log(error)
+                
+            }
 
         }
     }
