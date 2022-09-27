@@ -8,6 +8,7 @@ const userModule = {
             email:'',
             token:'',
             refresh: '',
+            loading: true
            
           
         }
@@ -77,6 +78,7 @@ const userModule = {
         },
         async autoLogin(context){
             try {
+                 if (context.state.loading) {
                 const refreshToken = localStorage.getItem('refresh')
                 if(refreshToken){
                     const token = await axios.post(`https://securetoken.googleapis.com/v1/token?key=${API_Key}`,{
@@ -97,12 +99,19 @@ const userModule = {
                     }
                     context.commit('authUser', newTokens)
                     context.dispatch('setToken',newTokens)
+                
+            }
+          
                 }
             
                 
             } catch (error) {
                 console.log(error)
+        
                 
+            }finally {
+                context.state.loading = false;
+
             }
 
         }
