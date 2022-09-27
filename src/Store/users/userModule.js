@@ -8,7 +8,8 @@ const userModule = {
             email:'',
             token:'',
             refresh: '',
-            loading: true
+            loading: true,
+            error: [false, '']
            
           
         }
@@ -19,6 +20,10 @@ const userModule = {
                 return true
             }
             return  false
+        },
+        getError(state){
+            return state.error
+
         }
     },
     mutations:{
@@ -31,6 +36,10 @@ const userModule = {
         state.email = null;
         state.token = null;
         state.refresh = null;
+
+       },
+       setError(state, payload){
+        state.error = [true, payload]
 
        }
     },
@@ -53,8 +62,10 @@ const userModule = {
                 console.log(response.data)
                 context.commit('authUser', response.data)
                 context.dispatch('setToken', response.data)
+                router.push('/dashboard')
             }).catch(err=> 
                 console.log(err))
+                context.commit('setError', 'Ooops! something went wrong.')
         },
 
         signup(context, payload){
@@ -65,8 +76,12 @@ const userModule = {
                 console.log(response.data)
                 context.commit('authUser', response.data)
                 context.dispatch('setToken', response.data)
+                router.push('/dashboard')
             }).catch(err=> 
-                console.log(err))
+                console.log(err)
+                )
+                context.commit('setError', 'Ooops! Check again.')
+              
 
         },
         signOut(context){
